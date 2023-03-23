@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat de mensajes</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+  <div id="chat">
+    <!-- Los mensajes se agregarán aquí -->
+  </div>
+
+  <form id="message-form">
+    <input type="text" id="username-input" placeholder="Nombre de usuario">
+    <input type="text" id="message-input" placeholder="Mensaje">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    $(document).ready(function() {
+      // Carga los datos del archivo .json
+      $.getJSON("messages.json", function(data) {
+        // Itera a través de los mensajes y los muestra en el chat
+        $.each(data.messages, function(index, message) {
+          $("#chat").append("<div><strong>" + message.username + "</strong>: " + message.message + "</div>");
+        });
+      });
+
+      // Agrega un nuevo mensaje cuando el formulario se envía
+      $("#message-form").submit(function(event) {
+        event.preventDefault();
+        var username = $("#username-input").val();
+        var message = $("#message-input").val();
+        var timestamp = new Date().toISOString();
+        var newMessage = { "username": username, "message": message, "timestamp": timestamp };
+        $("#chat").append("<div><strong>" + newMessage.username + "</strong>: " + newMessage.message + "</div>");
+        $("#username-input").val("");
+        $("#message-input").val("");
+      });
+    });
+  </script>
+
+</body>
+</html>
